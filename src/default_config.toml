@@ -1,0 +1,17 @@
+[base]
+secret_key = 'django-insecure-!7d*)4h1wof7xv-@4g$t3q^i2sw(1drid!al8u*)h&a2hu=9z)'
+debug = true
+allowed_hosts = ['*']
+
+[database]
+name = "rearme_device"
+user = "postgres"
+password = "pass"
+host = "127.0.0.1"
+port = 5432
+
+[storage]
+static_url = "/static/"
+media_url = "/media/"
+media_root = "/media/"
+static_root = "/static/"
