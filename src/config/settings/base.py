@@ -4,7 +4,9 @@ import toml
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-if os.path.exists(BASE_DIR / 'config.toml'):
+if os.path.exists(BASE_DIR / 'config_local.toml'):
+    _config_path = 'config_local.toml'
+elif os.path.exists(BASE_DIR / 'config.toml'):
     _config_path = 'config.toml'
 else:
     _config_path = 'default_config.toml'
