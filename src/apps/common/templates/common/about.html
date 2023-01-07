@@ -1,0 +1,47 @@
+{% extends 'base/base_common.html' %}
+{% load static %}
+
+{% block title %}
+О нас
+{% endblock %}
+
+{% block addCSS %}{% endblock %}
+
+{% block keywords %}О нас{% endblock %}
+
+{% block description %}О нас{% endblock %}
+
+{% block content_website %}
+<h1 class="main-h1">О нас</h1>
+
+<div class="text">
+    <p class="text-item">
+        <b>RearmDevice</b> - Ростовский интернет-магазин спициализирующийся на продаже компьютерных комплектующих. <br>
+        Мы продаем только самые качественные комплектующие для компьютеров, приемлимые цены и быстрая скорость доставки ждут вас в нашем интернет-магазине.
+    </p>
+    <ul class="text-ul">
+        <b>Наши приемущества:</b>
+        <li>
+            <img src="{% static 'base/base_common/img/favicon.png' %}" alt="">
+            Приемлимые цены
+        </li>
+        <li>
+            <img src="{% static 'base/base_common/img/favicon.png' %}" alt="">
+            Быстрая доставка
+        </li>
+        <li>
+            <img src="{% static 'base/base_common/img/favicon.png' %}" alt="">
+            Быстрая доставка
+        </li>
+         <li>
+            <img src="{% static 'base/base_common/img/favicon.png' %}" alt="">
+            Сотни довольных покупателей
+        </li>
+        <li>
+            <img src="{% static 'base/base_common/img/favicon.png' %}" alt="">
+            Хорошие отзывы о нашей работе
+        </li>
+    </ul>
+</div>
+
+{% endblock %}

@@ -6,5 +6,6 @@ settings_include(
     'installed_apps.py',
     'tz.py',
     'storage.py',
+    'auth.py',
     optional('local_settings.py'),
 )

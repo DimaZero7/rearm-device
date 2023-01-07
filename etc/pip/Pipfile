@@ -9,6 +9,9 @@ psycopg2-binary = "==2.9.3"
 pillow = "==9.3.0"
 django-split-settings = "==1.2.0"
 toml = "==0.10.2"
+django-cleanup = "==6.0.0"
+social-auth-app-django = "==3.1.0"
+social-auth-core = "==3.3.3"
 
 [dev-packages]
 

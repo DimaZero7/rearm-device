@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+{% load static %}
+{% block htmlLang %}<html lang="ru">{% endblock %}
+
+<head>
+    <title>RD | {% block title  %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="http-equiv" content="Content-type: text/html; charset=UTF-8">
+    <link rel="stylesheet" href="{% static 'base/base_common/css/styleMain.css' %}">
+    <link rel="stylesheet" href="{% static 'base/base_common/css/styleSlick.css' %}">
+    <link rel="stylesheet" href="{% static 'base/base_common/css/styleDetail.css' %}">
+    <link rel="stylesheet" href="{% static 'base/base_common/css/resize.css' %}">
+    {% block addCSS %}{% endblock %}
+    <link rel="shortcut icon" href="{% static 'base/base_common/img/favicon.png' %}" type="image/jpg">
+    <meta name="keywords" content="Rearm Device, {% block keywords %}{% endblock %}">
+    <meta name="description" content="{% block description %}Rearm Device{% endblock %}">
+
+    <!--*-->
+    <style>
+        {% if user.is_anonymous or user.profile.theme == True %}
+        :root {
+        /*Темная тема*/
+           --dark: #1d1b36;
+           --mid: #484171;
+           --lg: #9593b5;
+           --text: #fff;
+        }
+        {% endif %}
+            
+        {% if user.profile.theme == False %}
+        /*Светлая тема*/
+         :root {
+            --dark: #afadfc;
+            --mid: #e3e2fd;
+            --lg: #f8f8ff;
+            --text: #000;
+             }
+        
+        .social img,
+        .header-profile-icon img:not(:last-child),
+        .header-icon img,
+        .text-ul li::before,
+        .logo img{
+            filter: invert();
+        }
+        {% endif %}
+        
+        .preloader {
+            position: fixed;
+            left: 0;
+            top: 80px;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            z-index: 10000;
+        }
+
+        @media (max-width:769px){.preloader {top: 40px;}}
+        
+        .preloader-spin{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            margin: 100px 0 0 0;
+            justify-content: center;
+        }
+        
+        .preloader span{
+            display: block;
+            height: 5vw;
+            width: 5vw;
+            background-color: var(--red);
+            margin: 0 2%;
+            border-radius: 100px;
+            animation-iteration-count: infinite;
+            transform-origin: 50% 50%;
+        }
+        
+        @keyframes span1{ 0%{transform: scale(1)} 100%{transform: scale(0)} }
+        .preloader span:first-child{ animation: span1 linear 3s; }
+        
+        @keyframes span2{ 0%{transform: scale(1)} 100%{transform: scale(0)} }
+        .preloader span:nth-child(2){ animation: span2 linear 2s; }
+        
+        @keyframes span3{ 0%{transform: scale(1)} 100%{transform: scale(0)} }
+        .preloader span:last-child{ animation: span3 linear 1s; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+{% block body %}<body>{% endblock %}
+    <div class="wrapper">
+        <header class="header">
+            <div class="container">
+                <div class="header-container">
+                    <button class="menu-active"><span></span></button>
+                    <div class="header-info">
+                        <div class="header-about">
+                            <a href="{% url 'common:index' %}" class="header-link">Главная</a>
+                            <a href="{% url 'catalog:categories_list' %}" class="header-link">Каталог</a>
+                            <a href="{% url 'catalog:manufacturies_list' %}" class="header-link">Партнёры</a>
+                            <a href="{% url 'common:about' %}" class="header-link">О нас</a>
+                        </div>
+                        <div class="header-contacts">
+                            {% if user.username %}
+                            <div href="#" class="header-icon bell" title="Уведомления">
+                                <img src="{% static 'base/base_common/img/header-icon/bell.svg' %}" alt="Уведомления">
+                                    <ul class="messages">
+                                    {% if messages %}{% for message in messages %}<li {% if message.tags %} class="messages-item {{ message.tags }}" {% endif %}>{{ message }}</li>{% endfor %}{% endif %}
+                                    </ul>
+                                <ul class="messages alert"></ul>
+                            </div>
+                            {% endif %}
+                            <a href="tel:+79188913905" class="header-icon" title="Телефон">
+                                <img src="{% static 'base/base_common/img/header-icon/phone.svg' %}" alt="Телефон">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="header-main">
+                       <script>
+                           $(document).ready(function () {
+                           function logo() {
+                                if ($(window).width() < 769) {
+                                    $('.logo')
+                                        .html("<img src='{% static 'base/base_common/img/logo/logo_min.png' %}'>");
+                                } else {
+                                    $('.logo')
+                                        .html("<img src='{% static 'base/base_common/img/logo/logo_max.png' %}'>");
+                                }
+                            }
+                            logo();
+                            $(window).resize(function () {
+                                logo();
+                            })
+                           })
+                        </script>
+                        <a href="{% url 'common:index' %}" class="logo"></a>
+                        <form action="{% url 'common:search' %}" method="get" class="header-search">
+                            <input class="header-search-input" type="search" id="search" name="search" placeholder="{% if request.GET.search %}{{request.GET.search}}{% else %} Искать здесь...{% endif %}">
+                            <button type="submit" class="header-search-button"></button>
+                        </form>
+                        <div class="header-profile">
+                            {% if user.username %}
+                            {% block basket %}
+                            <a class="header-profile-icon shopping not-mobil" title="Открыть корзину">
+                                <img src="{% static 'base/base_common/img/header-profile-icon/basket.svg' %}" alt="Корзина">
+                                <span class="counter">{% if product_total_quantity_nbr %}{{product_total_quantity_nbr}}{% else %}0{% endif %}</span>
+                            </a>
+                            {% endblock %}
+                            <div class="shopping-list">
+                                <div class="container-total-price">
+                                    <div class="total-price-title">Корзина</div>
+                                </div>
+                                <table class="shopping-list-container">
+                                    {% block formbay %}
+                                    <form action="{% url 'basket:basket_add' %}" method="post" id="buyProduct">
+                                        {% endblock %}
+                                        {% for product_in_basket in products_in_basket %}
+                                        <tr class="shopping-item">
+                                            <td>{{product_in_basket.product.name}}</td>
+                                            <td>{{product_in_basket.quantity_nbr}} шт.</td>
+                                            <td>{{product_in_basket.total_price}}</td>
+                                            <td class="shopping-list-delete close" data-product_id="{{product_in_basket.id}}" title="Удалить товар"></td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr class="shopping-item">
+                                            <td>Товаров нет</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </form>
+                                </table>
+                                <div class="order"><a class="add-order" href="{% if user.username %}{% url 'basket:order_add' %}{% else %}{% url 'admin:login' %}{% endif %}">Перейти к заказу</a>
+                                </div>
+                                <button class="close-basket close" title="Закрыть корзину"></button>
+                            </div>
+                            <a href="{% if user.username %}{% url 'account:account' %}{% else %}{% url 'authorization:login' %}{% endif %}" class="header-profile-icon profile {% if user.profile.photo %}profile-photo{% endif %}" title="Профиль">
+                                {% if user.username %}
+                                {% if user.profile.photo %}
+                                <img src="{{user.profile.photo.url}}" alt="Профиль">
+                                {% else %}
+                                <img src="{% static 'base/base_common/img/header-profile-icon/profile.svg' %}" alt="Профиль">
+                                {% endif %}
+                                {% else %}
+                                <img src="{% static 'base/base_common/img/header-profile-icon/profile.svg' %}" alt="Профиль">
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <a href="{% url 'authorization:login' %}" class="header-profile-icon profile" title="Авторизация">
+                                <img src="{% static 'base/base_common/img/header-profile-icon/login.svg' %}" alt="Вход">
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if user.username %}
+                    <div class="username">
+                        {% if user.is_superuser %}<a href="{% url 'admin:index' %}">{{user.username}}</a>{% else %}{{user.username}}{% endif %}
+                        <div class="username_id">{{user.id}}</div>
+                        <div id="csrf_token">{% csrf_token %}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <a href="#header1" class="arrow-top" title="Наверх">
+            </a>
+        </header>
+
+        <main class="main"  id="header1">
+            <div class="container">
+                <div class="main-container">
+                    {% include 'catalog/categories_menu_include.html' %}
+                    <div class="content">
+                        <div class="preloader">
+                            <div class="preloader-spin">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        {% block content_website %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-container">
+                    <div class="footer-title"><a href="{% url 'common:index' %}">RearmDevice</a></div>
+                    <div class="footer-link spoilers mobil">
+                        <div class="footer-block">
+                            <div class="footer-block-title spoiler-active arrow">Магазин RD</div>
+                            <div class="footer-block-content spoiler-content">
+                                <ul class="footer-block-ul">
+                                    <li><a href="{% url 'catalog:categories_list' %}">Каталог</a></li>
+                                    <li><a href="{% url 'catalog:manufacturies_list' %}">Партнёры</a></li>
+                                    <li><a href="{% url 'common:about' %}">О нас</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-block">
+                            <div class="footer-block-title spoiler-active arrow">Покупателям</div>
+                            <div class="footer-block-content spoiler-content">
+                                <ul class="footer-block-ul">
+                                    <li><a href="{% url 'common:delivery' %}"> О Доставке</a></li>
+                                    <li><a href="{% url 'common:feedback' %}">Обратная связь</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-block">
+                            <div class="footer-block-title spoiler-active arrow">Помощь</div>
+                            <div class="footer-block-content spoiler-content">
+                                <ul class="footer-block-ul">
+                                    <li><a href="{% url 'common:how_to_order' %}">Как оформить заказ</a></li>
+                                    <li><a href="{% url 'common:payment_methods' %}">Способы оплаты</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-block">
+                            <div class="footer-block-title spoiler-active arrow">Контакты</div>
+                            <div class="footer-block-content spoiler-content">
+                                <div class="social">
+                                    <a href="https://www.facebook.com/"><img src="{% static 'base/base_common/img/footer-icon/facebook.svg' %}" alt="fb"></a>
+                                    <a href="https://vk.com/public196121641"><img src="{% static 'base/base_common/img/footer-icon/vk.svg' %}" alt="vk"></a>
+                                    <a href="https://www.instagram.com/"><img src="{% static 'base/base_common/img/footer-icon/instagram.svg' %}" alt="inst"></a>
+                                    <a href="mailto:tendetkinalesej@gmail.com"><img src="{% static 'base/base_common/img/footer-icon/mail.svg' %}" alt="mail"></a>
+                                </div>
+                                <ul class="footer-block-ul footer-feed-back">
+                                    <li><a href="tel:+79188913905">+7(918)891-39-05</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{% static 'base/base_common/js/jquery.touchSwipe.min.js' %}"></script>
+    <script>
+        //прелоадер
+        $(window).on('load', function() {
+            var $preloader = $('.preloader'),
+                $preloaderSpin = $('.preloader-spin');
+            $preloaderSpin.fadeOut();
+            $preloader.delay(50).fadeOut('slow');
+        })
+    </script>
+    <script src="{% static 'base/base_common/js/slick.min.js' %}"></script>
+    <script src="{% static 'base/base_common/js/scripts.js' %}" ></script>
+    {% block addJS %}{% endblock %}
+</body>
+
+</html>
+
+
+
+

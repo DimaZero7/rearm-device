@@ -15,3 +15,7 @@ static_url = "/static/"
 media_url = "/media/"
 media_root = "/media/"
 static_root = "/static/"
+
+[auth]
+google_oauth2_key = ''
+google_oauth2_SECRET = ''
